@@ -1,0 +1,20 @@
+.restaurant-card{
+    border: 1px solid aqua;
+
+}
+
+.restaurant-card-buttons{
+
+}
+
+#button-details{
+    background-color: green;
+}
+
+#button-delete{
+    background-color: red;
+}
+
+#button-wishlist{
+    background-color: yellow;
+}

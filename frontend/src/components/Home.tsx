@@ -2,9 +2,10 @@ import {Restaurant} from "./Restaurant.ts";
 import axios from "axios";
 import {useCallback, useEffect, useState} from "react";
 import {WishlistStatus} from "./WishlistStatus.ts";
-import "./SearchBar.tsx";
 import SearchBar from "./SearchBar.tsx";
 import "./Home.css"
+import RestaurantCard from "./RestaurantCard.tsx";
+import {useNavigate} from "react-router-dom";
 
 type Props = {
     restaurant: Restaurant;
@@ -17,7 +18,9 @@ type Props = {
 export default function Home() {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [searchValue, setSearchValue] = useState<string>("");
-    const [filterType, setFilterType] = useState<string>("name");
+    const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]);
+
+    const navigate = useNavigate();
 
     const fetchRestaurants = useCallback(() => {
         axios
@@ -30,55 +33,43 @@ export default function Home() {
         fetchRestaurants();
     }, [fetchRestaurants]);
 
-    const filteredRestaurants = restaurants.filter((restaurant) => {
-        const searchLower = searchValue.toLowerCase();
-        switch (filterType) {
-            case "name":
-                return restaurant.name.toLowerCase().includes(searchLower);
-            case "city":
-                return restaurant.city.toLowerCase().includes(searchLower);
-            case "category":
-                return restaurant.category.toLowerCase().includes(searchLower);
-            default:
-                return true;
-        }
-    });
+    const handleViewDetails = (id: string) => {
+        navigate(`/restaurant/${id}`);
+    };
+
+    const handleDelete = (id: string) => {
+        axios
+            .delete(`/api/restaurant/${id}`)
+            .then(() => {
+                setRestaurants(restaurants.filter((restaurant) => restaurant.id !== id));
+            })
+            .catch((error) => {
+                console.error("Error deleting restaurant:", error);
+            });
+    };
+
+    const handleToggleWishlist = (id: string) => {
+        console.log(`Toggling wishlist for restaurant with id: ${id}`);
+    };
 
     return (
         <div className="page">
             <h1>Restaurants</h1>
-
-            <SearchBar value={searchValue} onChange={setSearchValue} />
-
-            <div className="filter-buttons">
-                <button
-                    onClick={() => setFilterType("name")}
-                    className={filterType === "name" ? "active" : ""}
-                >
-                    Name
-                </button>
-                <button
-                    onClick={() => setFilterType("city")}
-                    className={filterType === "city" ? "active" : ""}
-                >
-                    City
-                </button>
-                <button
-                    onClick={() => setFilterType("category")}
-                    className={filterType === "category" ? "active" : ""}
-                >
-                    Category
-                </button>
-            </div>
-
+            <SearchBar
+                value={searchValue}
+                onChange={setSearchValue}
+                restaurants={restaurants}
+                setFilteredRestaurants={setFilteredRestaurants}
+            />
             <div className="restaurant-list">
                 {filteredRestaurants.map((restaurant) => (
-                    <div key={restaurant.id} className="restaurant-card">
-                        <h2>{restaurant.name}</h2>
-                        <p>{restaurant.city}</p>
-                        <p>{restaurant.category}</p>
-                        <p>{restaurant.description}</p>
-                    </div>
+                    <RestaurantCard
+                        key={restaurant.id}
+                        restaurant={restaurant}
+                        onViewDetails={handleViewDetails}
+                        onDelete={handleDelete}
+                        onToggleWishlist={handleToggleWishlist}
+                    />
                 ))}
             </div>
         </div>
