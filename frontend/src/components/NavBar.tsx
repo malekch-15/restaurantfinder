@@ -9,6 +9,7 @@ export default function NavBar() {
         <>
             <button onClick={() => navigate("/")}>Home</button>
             <button onClick={() => navigate("/wishlist")}>Wishlist</button>
+            <button onClick={() => navigate("/addrestaurant")}>Add Restaurant</button>
         </>
     );
 }

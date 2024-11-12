@@ -31,10 +31,14 @@ export default function WishList() {
     };
 
     const handleDelete = (id: string) => {
+        console.log("delete", id);
         axios
             .delete(`/api/restaurant/${id}`)
             .then(() => {
-                setWishlistRestaurants(wishlistRestaurants.filter((restaurant) => restaurant.id !== id));
+                setWishlistRestaurants((prevRestaurants) =>
+                    prevRestaurants.filter((restaurant) => restaurant.id !== id)
+                );
+                fetchWishlistRestaurants();
             })
             .catch((error) => {
                 console.error("Error deleting restaurant:", error);
@@ -56,6 +60,7 @@ export default function WishList() {
                 setWishlistRestaurants((prevRestaurants) =>
                     prevRestaurants.map((r) => (r.id === id ? response.data : r))
                 );
+                fetchWishlistRestaurants();
             })
             .catch((error) => console.error("Error updating wishlist status:", error));
     };

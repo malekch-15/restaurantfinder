@@ -34,6 +34,7 @@ export default function Home() {
     };
 
     const handleDelete = (id: string) => {
+        console.log("Deleting restaurant with ID:", id);
         axios
             .delete(`/api/restaurant/${id}`)
             .then(() => {
