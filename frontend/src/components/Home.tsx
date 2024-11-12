@@ -7,18 +7,14 @@ import "./Home.css"
 import RestaurantCard from "./RestaurantCard.tsx";
 import {useNavigate} from "react-router-dom";
 
-type Props = {
-    restaurant: Restaurant;
-    onAddToWishlist: (id: string) => void;
-    onRemoveFromWishlist: (id: string) => void;
-    wishlistStatus: WishlistStatus;
-    onRestaurantUpdate: (restaurant: Restaurant) => void;
-}
 
 export default function Home() {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [searchValue, setSearchValue] = useState<string>("");
     const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]);
+    const [editingRestaurantId, setEditingRestaurantId] = useState<string | null>(null);
+    const [editData, setEditData] = useState<{ [key: string]: string }>({});
+
 
     const navigate = useNavigate();
 
@@ -49,8 +45,54 @@ export default function Home() {
     };
 
     const handleToggleWishlist = (id: string) => {
-        console.log(`Toggling wishlist for restaurant with id: ${id}`);
+        const restaurant = restaurants.find((r) => r.id === id);
+        if (!restaurant) return;
+
+        const updatedStatus: WishlistStatus =
+            restaurant.status === "ON_WISHLIST" ? "NOT_ON_WISHLIST" : "ON_WISHLIST";
+
+        const updatedRestaurant = { ...restaurant, status: updatedStatus };
+
+        axios
+            .put(`/api/restaurant/${id}`, updatedRestaurant)
+            .then((response) => {
+                setRestaurants((prevRestaurants) =>
+                    prevRestaurants.map((r) => (r.id === id ? response.data : r))
+                );
+            })
+            .catch((error) => console.error("Error updating wishlist status:", error));
     };
+
+    const handleEditToggle = (id: string) => {
+        setEditingRestaurantId(id);
+        const restaurantToEdit = restaurants.find((restaurant) => restaurant.id === id);
+        if (restaurantToEdit) {
+            setEditData({
+                name: restaurantToEdit.name,
+                city: restaurantToEdit.city,
+                category: restaurantToEdit.category,
+                description: restaurantToEdit.description,
+            });
+        }
+    };
+
+    const handleEditChange = (field: string, value: string) => {
+        setEditData((prevData) => ({ ...prevData, [field]: value }));
+    };
+
+    const handleSaveEdit = (id: string) => {
+        const updatedRestaurant = { ...restaurants.find((r) => r.id === id), ...editData };
+        axios
+            .put(`/api/restaurant/${id}`, updatedRestaurant)
+            .then((response) => {
+                setRestaurants((prevRestaurants) =>
+                    prevRestaurants.map((r) => (r.id === id ? response.data : r))
+                );
+                setEditingRestaurantId(null);
+            })
+            .catch((error) => console.error("Error saving restaurant edits:", error));
+    };
+
 
     return (
         <div className="page">
@@ -69,6 +111,11 @@ export default function Home() {
                         onViewDetails={handleViewDetails}
                         onDelete={handleDelete}
                         onToggleWishlist={handleToggleWishlist}
+                        onEditToggle={() => handleEditToggle(restaurant.id)}
+                        isEditing={editingRestaurantId === restaurant.id}
+                        editData={editData}
+                        onEditChange={handleEditChange}
+                        onSaveEdit={() => handleSaveEdit(restaurant.id)}
                     />
                 ))}
             </div>

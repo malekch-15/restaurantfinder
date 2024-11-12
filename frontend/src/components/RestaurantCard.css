@@ -15,6 +15,15 @@
     background-color: red;
 }
 
+#button-edit{
+    background-color: blue;
+}
+
 #button-wishlist{
     background-color: yellow;
+}
+
+#wishlist-on {
+    color: red;
+    font-weight: bold;
 }
