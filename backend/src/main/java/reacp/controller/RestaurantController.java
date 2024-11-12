@@ -1,9 +1,9 @@
-package team2_backend.controller;
+package reacp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import team2_backend.model.RestaurantModel;
-import team2_backend.service.RestaurantService;
+import reacp.model.RestaurantModel;
+import reacp.services.RestaurantService;
 
 import java.util.List;
 

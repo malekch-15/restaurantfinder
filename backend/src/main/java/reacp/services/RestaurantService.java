@@ -1,11 +1,10 @@
-package team2_backend.service;
+package reacp.services;
 
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import team2_backend.model.RestaurantModel;
-import team2_backend.model.WishlistStatus;
-import team2_backend.repository.RestaurantRepo;
+import reacp.model.RestaurantModel;
+import reacp.repository.RestaurantRepo;
 
 import java.util.ArrayList;
 import java.util.List;

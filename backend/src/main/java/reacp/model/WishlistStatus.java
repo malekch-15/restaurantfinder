@@ -1,4 +1,4 @@
-package team2_backend.model;
+package reacp.model;
 
 public enum WishlistStatus {
     ON_WISHLIST,
