@@ -1,7 +1,7 @@
 import { Restaurant } from "./Restaurant.ts";
 import "./RestaurantCard.css";
 
-type RestaurantCardProps = {
+export type RestaurantCardProps = {
     restaurant: Restaurant;
     onViewDetails: (id: string) => void;
     onDelete: (id: string) => void;
@@ -71,12 +71,12 @@ export default function RestaurantCard({
                     <p>{restaurant.description}</p>
                     <div className="restaurant-card-buttons">
                         <button id="button-details" onClick={() => onViewDetails(restaurant.id)}>Details</button>
-                        <button id="button-delete" onClick={handleDelete}>Delete</button>
                         <button id="button-edit" onClick={onEditToggle}>Edit</button>
+                        <button id="button-delete" onClick={handleDelete}>Delete</button>
                         <button
                             id="button-wishlist"
                             onClick={() => onToggleWishlist(restaurant.id)}
-                            style={{ color: restaurant.status === "ON_WISHLIST" ? "red" : "black" }}
+                            style={{color: restaurant.status === "ON_WISHLIST" ? "red" : "black"}}
                         >
                             ♥
                         </button>
