@@ -36,8 +36,8 @@ public class RestaurantService {
                 restaurantModel.description(),
                 restaurantModel.status()
         );
-        restaurantRepo.save(newRestaurantModel);
-        return restaurantRepo.findById(newRestaurantModel.id()).orElseThrow();
+
+        return  restaurantRepo.save(newRestaurantModel);
     }
 
 
@@ -68,8 +68,8 @@ public class RestaurantService {
                     restaurantModel.description(),
                     restaurantModel.status()
             );
-            restaurantRepo.save(newRestaurantModel);
-            return restaurantRepo.findById(newRestaurantModel.id()).orElseThrow();
+
+            return   restaurantRepo.save(newRestaurantModel);
         } else {
             throw new NoSuchElementException("No Restaurant found with the Put-Id:"+id);
         }
@@ -85,8 +85,8 @@ public class RestaurantService {
                 restaurantModel.description() != null ? restaurantModel.description() : existingRestaurant.description(),
                 restaurantModel.status() != null ? restaurantModel.status() : existingRestaurant.status()
         );
-        restaurantRepo.save(updatedRestaurant);
-        return updatedRestaurant;
+
+        return  restaurantRepo.save(updatedRestaurant);
     }
 
     public void deleteRestaurant(String id) {
