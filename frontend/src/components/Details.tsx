@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {useNavigate, useParams} from "react-router-dom";
 import { Restaurant } from "./Restaurant";
-import MapBox from "./MapBox.tsx";
+import MapBox from "./mapbox/MapBox.tsx";
+import {useParams} from "react-router-dom";
 
 export default function Details() {
     const { id } = useParams<{ id: string }>();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-    const navigate = useNavigate();
+
 
     useEffect(() => {
         axios
@@ -27,8 +27,6 @@ export default function Details() {
             <p>City: {restaurant.city}</p>
             <p>Category: {restaurant.category}</p>
             <p>Description: {restaurant.description}</p>
-
-            <button onClick={() => navigate("/")}>Back to Home</button>
             <MapBox  />
         </>
     );
