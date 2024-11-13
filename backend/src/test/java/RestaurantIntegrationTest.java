@@ -31,7 +31,7 @@ class RestaurantIntegrationTest {
     private RestaurantModel createRestaurant(String id, String name, String city, String category,
                                              String description, WishlistStatus wishlistStatus) {
         RestaurantModel restaurantModel = new RestaurantModel(id, name, city, category, description, wishlistStatus);
-        return restaurantRepo.save(restaurantModel); // Restaurant speichern
+        return restaurantRepo.save(restaurantModel);
     }
 
     @Test
