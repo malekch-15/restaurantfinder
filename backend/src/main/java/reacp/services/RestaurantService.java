@@ -2,6 +2,7 @@ package reacp.services;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reacp.model.RestaurantModel;
 import reacp.repository.RestaurantRepo;

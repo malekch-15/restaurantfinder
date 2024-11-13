@@ -15,20 +15,28 @@ class RestaurantServiceTest {
     IdService idService= new IdService();
 RestaurantRepo restaurantRepo = mock(RestaurantRepo.class);
 RestaurantService restaurantService = new RestaurantService(idService, restaurantRepo);
-
+//RESTAURANT DATA
+RestaurantModel restaurantModel =new RestaurantModel("1","Fischereihafen Restaurant",
+            "Hamburg","Seafood","Ein gehobenes Restaurant mit Hafenblick, ",ON_WISHLIST);
+    RestaurantModel restaurantModel2 =new RestaurantModel("2","Fischereihafen Restaurant",
+            "Hamburg","Seafood","Ein gehobenes Restaurant mit Hafenblick, ",ON_WISHLIST);
+    List<RestaurantModel> restaurants= List.of(restaurantModel,restaurantModel2);
  @Test
     void getAllRestaurants() {
      //Given
-     RestaurantModel restaurantModel =new RestaurantModel("1","Fischereihafen Restaurant",
-             "Hamburg","Seafood","Ein gehobenes Restaurant mit Hafenblick, ",ON_WISHLIST);
 
-     List<RestaurantModel> restaurants= List.of(restaurantModel);
+
      when(restaurantRepo.findAll()).thenReturn(restaurants);
      //WHEN
-     List<RestaurantModel> actuel=restaurantService.getAllRestaurants();
+     List<RestaurantModel> expected=restaurantService.getAllRestaurants();
      //THEN
-     assertEquals(actuel,restaurants);
-     System.out.println(actuel +"and"+ restaurants);
+     assertEquals(expected,restaurants);
+     System.out.println(expected+"and"+ restaurants);
 
  }
+
+    @Test
+    void getRestaurantById() {
+
+    }
 }
