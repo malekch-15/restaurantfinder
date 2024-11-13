@@ -17,8 +17,8 @@ import java.util.List;
 
 @SpringBootTest(classes = BackendApplication.class)
 @AutoConfigureMockMvc
-class RestaurantIntegrationTest {
-
+class RestaurantControllerIntegrationTest {
+    static RestaurantModel restaurantModel;
     @Autowired
     MockMvc mockMvc;
 
@@ -28,14 +28,11 @@ class RestaurantIntegrationTest {
     @BeforeEach
     void setup() {
         restaurantRepo.deleteAll();
-        createRestaurant("1", "Testrestaurant", "Testcity", "testkategorie",
-                "test description", WishlistStatus.ON_WISHLIST);
-    }
 
-    private RestaurantModel createRestaurant(String id, String name, String city, String category,
-                                             String description, WishlistStatus wishlistStatus) {
-        RestaurantModel restaurantModel = new RestaurantModel(id, name, city, category, description, wishlistStatus);
-        return restaurantRepo.save(restaurantModel);
+        restaurantModel = new RestaurantModel("1", "Testrestaurant", "Testcity", "testkategorie",
+                "test description", WishlistStatus.ON_WISHLIST);
+
+        restaurantRepo.save(restaurantModel);
     }
 
     @Test
@@ -89,17 +86,18 @@ class RestaurantIntegrationTest {
                 ));
 
     }
+
     @Test
     void postRestaurant_shouldReturnSavedRestaurant() throws Exception {
         //GIVEN
         restaurantRepo.deleteAll();
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders.post("/api/restaurant")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
                         
                                                                                          {
-                            "id": "1",
+                        
                             "name": "Testrestaurant",
                             "city": "Testcity",
                             "category": "testkategorie",
@@ -109,11 +107,34 @@ class RestaurantIntegrationTest {
                         
                         """));
         //THEN
-        List<RestaurantModel> allRestaurants= restaurantRepo.findAll();
-        Assertions.assertEquals(1,allRestaurants.size());
+        List<RestaurantModel> allRestaurants = restaurantRepo.findAll();
+        Assertions.assertEquals(1, allRestaurants.size());
 
+        RestaurantModel savedRestaurant = allRestaurants.get(0);
+        org.assertj.core.api.Assertions.assertThat(savedRestaurant)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(new RestaurantModel(
+                        null,
+                        "Testrestaurant",
+                        "Testcity",
+                        "testkategorie",
+                        "test description",
+                        WishlistStatus.ON_WISHLIST
+                ));
+    }
 
+    @Test
+    void deleteRestaurant_shouldDeleteRestaurant_whenGivenValidId() throws Exception {
+        //GIVEN
 
+        //WHEN & THEN
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/restaurant/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
 
 }
