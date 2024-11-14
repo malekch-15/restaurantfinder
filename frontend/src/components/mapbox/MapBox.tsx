@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Restaurant } from "../Restaurant.ts";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -6,25 +6,27 @@ import mapboxgl from "mapbox-gl";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
+// Interface für die Struktur des Features in der Mapbox-Antwort definieren
+interface MapboxFeature {
+    place_type: string[];
+    center: [number, number]; // [longitude, latitude]
+    // Weitere Eigenschaften können hinzugefügt werden, falls nötig
+}
+
 export default function MapBox() {
     const { id } = useParams<{ id: string }>();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const [coordinates, setCoordinates] = useState<{ lon: number; lat: number } | null>(null);
-    const navigate = useNavigate();
 
-    // Refs für die Karte und den Marker mit expliziten Typen
     const mapContainer = useRef<HTMLDivElement | null>(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const marker = useRef<mapboxgl.Marker | null>(null);
 
-    // Axios Request, um Restaurantdaten und Geocoding-Informationen zu holen
     useEffect(() => {
         axios
             .get(`/api/restaurant/${id}`)
             .then((response) => {
                 setRestaurant(response.data);
-
-                // Adresse für die Geocoding-Abfrage zusammenstellen
                 const address = `${response.data.street}, ${response.data.city}, ${response.data.zipcode}, ${response.data.country}`;
 
                 return axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json`, {
@@ -34,63 +36,57 @@ export default function MapBox() {
                 });
             })
             .then((geoResponse) => {
-                console.log("Geocoding response features:", geoResponse.data.features);
+                console.log("Geocoding-Antwort-Features:", geoResponse.data.features);
                 if (geoResponse.data.features && geoResponse.data.features.length > 0) {
-                    const place = geoResponse.data.features.find((feature) =>
+                    const place = geoResponse.data.features.find((feature: MapboxFeature) =>
                         feature.place_type.includes("address") || feature.place_type.includes("place")
                     );
 
                     if (place) {
                         const [lon, lat] = place.center;
-                        console.log("Geocoded coordinates:", lon, lat);  // Logge die Koordinaten hier
+                        console.log("Geocodierte Koordinaten:", lon, lat);
                         setCoordinates({ lon, lat });
                     } else {
-                        console.warn("No suitable location found for the given address.");
+                        console.warn("Keine geeignete Position für die angegebene Adresse gefunden.");
                     }
                 } else {
-                    console.warn("No features returned for the given query.");
+                    console.warn("Keine Features für die angegebene Abfrage zurückgegeben.");
                 }
             })
             .catch((error) => console.error("Fehler beim Laden der Restaurantdaten oder Koordinaten:", error));
     }, [id]);
 
     useEffect(() => {
-        // Warte auf die Koordinaten, bevor du die Karte initialisierst
         if (!coordinates || map.current) return;
 
-        console.log("Initializing map with coordinates:", coordinates);
+        console.log("Karte mit Koordinaten initialisieren:", coordinates);
 
-        // Karte initialisieren
         map.current = new mapboxgl.Map({
-            container: mapContainer.current!, // Container-Ref für die Karte
-            style: "mapbox://styles/mapbox/streets-v11", // Kartenstil
-            center: [coordinates.lon, coordinates.lat], // Anfangszentrum
-            zoom: 14, // Startzoom-Level
+            container: mapContainer.current!,
+            style: "mapbox://styles/mapbox/streets-v11",
+            center: [coordinates.lon, coordinates.lat],
+            zoom: 14,
         });
 
-        // Marker erstellen und initial setzen
         marker.current = new mapboxgl.Marker()
             .setLngLat([coordinates.lon, coordinates.lat])
-            .addTo(map.current); // Der Marker wird an die Karte hinzugefügt
+            .addTo(map.current);
 
-        // Karte zentrieren auf die Markerposition
         map.current.on("load", () => {
             if (coordinates) {
                 map.current!.setCenter([coordinates.lon, coordinates.lat]);
             }
         });
-
-    }, [coordinates]); // Dieser useEffect wird ausgeführt, wenn sich die Koordinaten ändern
+    }, [coordinates]);
 
     useEffect(() => {
-        // Wenn der Marker existiert, aktualisiere ihn bei einer Änderung der Koordinaten
         if (marker.current && coordinates) {
-            console.log("Updating marker position to:", coordinates);
-            // Markerposition aktualisieren - stelle sicher, dass das Array übergeben wird
-            marker.current.setLngLat([coordinates.lon, coordinates.lat]); // Markerposition aktualisieren
-            map.current!.setCenter([coordinates.lon, coordinates.lat]); // Karte zentrieren
+            console.log("Aktualisiere die Marker-Position auf:", coordinates);
+
+            marker.current.setLngLat([coordinates.lon, coordinates.lat]);
+            map.current!.setCenter([coordinates.lon, coordinates.lat]);
         }
-    }, [coordinates]); // Dieser useEffect wird ausgeführt, wenn sich die Koordinaten ändern
+    }, [coordinates]);
 
     if (!restaurant) {
         return <p>Loading...</p>;
