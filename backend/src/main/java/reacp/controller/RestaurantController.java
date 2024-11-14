@@ -1,6 +1,7 @@
 package reacp.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reacp.model.RestaurantModel;
 import reacp.services.RestaurantService;
@@ -24,6 +25,7 @@ public class RestaurantController {
         return restaurantService.getRestaurantById(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public RestaurantModel postRestaurant(@RequestBody RestaurantModel restaurantModel){
         return restaurantService.addRestaurant(restaurantModel);

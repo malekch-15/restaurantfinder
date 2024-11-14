@@ -1,3 +1,5 @@
+package reacp.controller;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,14 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import reacp.BackendApplication;
 import reacp.model.RestaurantModel;
 import reacp.model.WishlistStatus;
 import reacp.repository.RestaurantRepo;
 
 import java.util.List;
 
-@SpringBootTest(classes = BackendApplication.class)
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
 @AutoConfigureMockMvc
 class RestaurantControllerIntegrationTest {
     static RestaurantModel restaurantModel;
@@ -44,7 +47,7 @@ class RestaurantControllerIntegrationTest {
                 )
                 //THEN
                 .andExpect(
-                        MockMvcResultMatchers.status().isOk())
+                        status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                                                                                        [ 
                                                                                          {
@@ -70,7 +73,7 @@ class RestaurantControllerIntegrationTest {
                 )
                 //THEN
                 .andExpect(
-                        MockMvcResultMatchers.status().isOk())
+                        status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("""
                         
                                                                                          {
@@ -105,7 +108,8 @@ class RestaurantControllerIntegrationTest {
                             "status": "ON_WISHLIST"
                                                                                          }
                         
-                        """));
+                        """)
+        ).andExpect(status().isCreated());
         //THEN
         List<RestaurantModel> allRestaurants = restaurantRepo.findAll();
         Assertions.assertEquals(1, allRestaurants.size());
@@ -130,10 +134,10 @@ class RestaurantControllerIntegrationTest {
 
         //WHEN & THEN
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/restaurant/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/restaurant"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
 
