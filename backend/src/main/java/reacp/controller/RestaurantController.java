@@ -14,77 +14,66 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    @GetMapping
-    public List<RestaurantModelDto> getAllRestaurants(){
-        List<RestaurantModel> restaurantModels = restaurantService.getAllRestaurants();
-        return restaurantModels.stream().map(restaurantModel -> new RestaurantModelDto(
-                restaurantModel.name(),
-                restaurantModel.city(),
-                restaurantModel.category(),
-                restaurantModel.description(),
-                restaurantModel.status()
-        )).toList();
+
+    @GetMapping()
+    public List<RestaurantModel> getAllRestaurants(){
+        return restaurantService.getAllRestaurants();
     }
 
     @GetMapping("/{id}")
-    public RestaurantModelDto getRestaurantById(@PathVariable String id){
-        RestaurantModel restaurantModel = restaurantService.getRestaurantById(id);
-        return new RestaurantModelDto(
-                restaurantModel.name(),
-                restaurantModel.city(),
-                restaurantModel.category(),
-                restaurantModel.description(),
-                restaurantModel.status()
-        );
+    public RestaurantModel getRestaurantById(@PathVariable String id){
+        return restaurantService.getRestaurantById(id);
     }
+
 
     @PostMapping
-    public RestaurantModelDto postRestaurant(@RequestBody RestaurantModel restaurantModel){
-        RestaurantModel newRestaurantModel = restaurantService.addRestaurant(restaurantModel);
-        return new RestaurantModelDto(
-                newRestaurantModel.name(),
-                newRestaurantModel.city(),
-                newRestaurantModel.category(),
-                newRestaurantModel.description(),
-                newRestaurantModel.status()
-        );
+    public RestaurantModel postRestaurant(@RequestBody RestaurantModelDto restaurantModelDto){
+        return restaurantService.addRestaurant(
+                new RestaurantModel(
+                        null,
+                        restaurantModelDto.name(),
+                        restaurantModelDto.city(),
+                        restaurantModelDto.category(),
+                        restaurantModelDto.description(),
+                        restaurantModelDto.status()
+                ));
     }
+
 
     @PostMapping("/update-all")
-    public List<RestaurantModelDto> updateAll(@RequestBody List<RestaurantModel> restaurantModels){
-        List<RestaurantModel> updatedAllRestaurants = restaurantService.updateAll(restaurantModels);
-        return updatedAllRestaurants.stream().map(restaurantModel -> new RestaurantModelDto(
-                restaurantModel.name(),
-                restaurantModel.city(),
-                restaurantModel.category(),
-                restaurantModel.description(),
-                restaurantModel.status()
-        )).toList();
+    public List<RestaurantModel> updateAll(@RequestBody List<RestaurantModel> restaurantModels){
+        return restaurantService.updateAll(restaurantModels);
     }
+
+
 
     @PutMapping("/{id}")
-    public RestaurantModelDto putRestaurant(@PathVariable String id, @RequestBody RestaurantModel restaurantModel){
-        RestaurantModel newRestaurantModel = restaurantService.updateRestaurantWithPut(id, restaurantModel);
-        return new RestaurantModelDto(
-                newRestaurantModel.name(),
-                newRestaurantModel.city(),
-                newRestaurantModel.category(),
-                newRestaurantModel.description(),
-                newRestaurantModel.status()
-        );
+    public RestaurantModel putRestaurant(@PathVariable String id, @RequestBody RestaurantModelDto restaurantModeldto){
+        return restaurantService.updateRestaurantWithPut(id,
+                new RestaurantModel(
+                        id,
+                        restaurantModeldto.name(),
+                        restaurantModeldto.city(),
+                        restaurantModeldto.category(),
+                        restaurantModeldto.description(),
+                        restaurantModeldto.status()
+                ));
     }
 
+
     @PatchMapping("/{id}")
-    public RestaurantModelDto patchRestaurant(@PathVariable String id, @RequestBody RestaurantModel restaurantModel){
-        RestaurantModel newRestaurantModel = restaurantService.updateRestaurantWithPatch(id, restaurantModel);
-        return new RestaurantModelDto(
-                newRestaurantModel.name(),
-                newRestaurantModel.city(),
-                newRestaurantModel.category(),
-                newRestaurantModel.description(),
-                newRestaurantModel.status()
-        );
+    public RestaurantModel patchRestaurant(@PathVariable String id, @RequestBody RestaurantModelDto restaurantModeldto){
+        return restaurantService.updateRestaurantWithPatch(id,
+                new RestaurantModel(
+                        id,
+                        restaurantModeldto.name(),
+                        restaurantModeldto.city(),
+                        restaurantModeldto.category(),
+                        restaurantModeldto.description(),
+                        restaurantModeldto.status()
+                ));
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteRestaurant(@PathVariable String id){
