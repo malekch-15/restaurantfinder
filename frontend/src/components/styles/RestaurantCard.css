@@ -2,6 +2,21 @@
 
 }
 
+#button-edit{
+
+}
+#button-wishlist{
+
+}
+
+.red {
+    color: red;
+}
+
+.black{
+    color: black;
+}
+
 .restaurantCard {
     width: 300px;
     border-radius: 10px;
@@ -36,7 +51,6 @@
 .restaurantCard button {
     padding: 12px 20px;
     background-color: #3498db;
-    color: white;
     border: none;
     border-radius: 25px;
     cursor: pointer;

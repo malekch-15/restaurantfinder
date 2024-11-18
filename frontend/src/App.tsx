@@ -3,6 +3,9 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {Restaurant} from "./components/model/Restaurant.ts";
 import Home from "./components/Home/Home.tsx"
+import {WishlistStatus} from "./components/model/WishlistStatus.ts";
+import {Route, Routes} from "react-router-dom";
+import Wishlist from "./components/Wishlist.tsx";
 
 
 export default function App() {
@@ -29,9 +32,43 @@ export default function App() {
             console.error(error)
         })}
 
+    const handleToggleWishlist = (id: string) => {
+        const restaurant = restaurants.find(r => r.id === id);
+        if (!restaurant) return;
+
+        const updatedStatus: WishlistStatus = restaurant.status === "ON_WISHLIST" ? "NOT_ON_WISHLIST" : "ON_WISHLIST";
+        const updatedRestaurant = { ...restaurant, status: updatedStatus };
+
+        // axios
+        //     .put(`/api/restaurant/${id}`, updatedRestaurant)
+        //     .then((response) => {
+        //         setRestaurants(restaurants.map(r => r.id === id ? response.data : r)
+        //         );
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error updating restaurant", error);
+        //     });
+
+        axios
+            .put(`/api/restaurant/${id}`, updatedRestaurant)
+            .then((response) => {
+                setRestaurants(prevRestaurants =>
+                    prevRestaurants.map(r => r.id === id ? response.data : r)
+                );
+            })
+            .catch((error) => {
+                console.error("Error updating restaurant", error);
+            });
+    };
+
         return (
-            <>
-                <Home restaurants={restaurants} onDeleteRestaurant={handleDeleteRestaurant}/>
-            </>
+                <Routes>
+                <Route path="/" element={<Home restaurants={restaurants}
+                                               onDeleteRestaurant={handleDeleteRestaurant}
+                                               onToggleWishlist={handleToggleWishlist}/>}/>
+                        <Route path="/wishlist" element={<Wishlist restaurants={restaurants.filter(r => r.status === "ON_WISHLIST")}
+                                                                   onToggleWishlist={handleToggleWishlist}/>}/>
+                </Routes>
+
         );
     }
