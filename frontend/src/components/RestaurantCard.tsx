@@ -1,18 +1,23 @@
-import "./model/Restaurant.ts"
+
 import {Restaurant} from "./model/Restaurant.ts";
 import "./styles/RestaurantCard.css"
 
-type Props = {
+type RestaurantCardProps = {
     restaurant: Restaurant;
+    onDeleteRestaurant: (id:string)=>void
 }
 
-function RestaurantCard(props: Props) {
+function RestaurantCard(props: Readonly<RestaurantCardProps>) {
 
     return (
-        <div className="restaurantCard">
+         <div className="restaurantCard">
             <h3>{props.restaurant.name}</h3>
-            <h4>{props.restaurant.description}</h4>
-        </div>
+            <h4>{props.restaurant.city}</h4>
+            <h4>{props.restaurant.category}</h4>
+            <button id="button-delete" onClick={() => props.onDeleteRestaurant(props.restaurant.id)}>Delete</button>
+
+         </div>
+
     );
 }
 
