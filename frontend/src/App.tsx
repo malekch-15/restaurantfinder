@@ -2,13 +2,13 @@ import './App.css'
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {Restaurant} from "./components/model/Restaurant.ts";
-import RestaurantCard from "./components/RestaurantCard.tsx";
+import Home from "./components/Home/Home.tsx"
 
 
 
 export default function App() {
 
-    const [restaurants, setRestaurants] = useState<Restaurant[]>()
+    const [restaurants, setRestaurants] = useState<Restaurant[]>([])
 
     const getAllRestaurants = () => {
         axios.get("/api/restaurant").then(
@@ -23,8 +23,7 @@ export default function App() {
 
     return (
         <>
-            <h2>Restaurantfinder</h2>
-            {restaurants?.map(r => (<RestaurantCard restaurant={r} key={r.id}/>))}
+            <Home restaurants={restaurants}/>
         </>
     );
 }
