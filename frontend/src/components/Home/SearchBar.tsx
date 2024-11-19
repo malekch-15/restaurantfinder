@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-
+import "./SearchBar.css"
 type SearchBarProps = {
     onSearch: (query: string) => void;
 };
@@ -10,7 +10,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     };
 
     return (
-        <div>
+        <div className="search-bar-container">
             <input
                 type="text"
                 placeholder="Search restaurants..."
