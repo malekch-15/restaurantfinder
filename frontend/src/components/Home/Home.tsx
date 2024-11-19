@@ -1,6 +1,6 @@
 import {Restaurant} from "../model/Restaurant";
 import RestaurantCard from "../RestaurantCard.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import SearchBar from "./SearchBar.tsx";
 
 
@@ -13,17 +13,42 @@ type HomeProps = {
 
 export default function Home(props: Readonly<HomeProps>) {
     const [searchQuery, setSearchQuery] = useState("");
+    const [filter, setFilter] = useState<"name" | "category" |"city">("name");
+    const [filteredRestaurants, setFilteredRestaurants] = useState(props.restaurants);
 
     const handleSearch = (query: string) => {
         setSearchQuery(query.toLowerCase());
     };
 
-    const filteredRestaurants = props.restaurants.filter(
-        (r) =>
-            r.name.toLowerCase().includes(searchQuery) ||
-            r.city.toLowerCase().includes(searchQuery) ||
-            r.category.toLowerCase().includes(searchQuery)
-    );
+    const handleFilterChange = (filter: "name" | "category" | "city") => {
+        setFilter(filter);
+    }
+
+    // const filteredRestaurants = props.restaurants.filter(
+    //     (r) =>
+    //         r.name.toLowerCase().includes(searchQuery) ||
+    //         r.city.toLowerCase().includes(searchQuery) ||
+    //         r.category.toLowerCase().includes(searchQuery)
+    // );
+
+    React.useEffect(() => {
+        const filtered = props.restaurants.filter((restaurant) => {
+            const searchLower = onSearch.toLowerCase();
+            switch (filterType) {
+                case "name":
+                    return restaurant.name.toLowerCase().includes(searchLower);
+                case "city":
+                    return restaurant.city.toLowerCase().includes(searchLower);
+                case "category":
+                    return restaurant.category.toLowerCase().includes(searchLower);
+                default:
+                    return true;
+            }
+        });
+        setFilteredRestaurants(filtered);
+    }, [value, filterType, restaurants, setFilteredRestaurants]);
+
+
 
     return (
         <div>
