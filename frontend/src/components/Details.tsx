@@ -2,14 +2,9 @@ import { Restaurant } from "./model/Restaurant";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import AddRestaurant from "./AddRestaurant.tsx";
 
-type DetailsProps = {
 
-    onHandleSaveEdit?: (restaurant: Restaurant) => void;
-};
-
-export default function Details(props: DetailsProps) {
+export default function Details() {
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const { id } = useParams<{ id: string }>();
 

@@ -7,6 +7,8 @@ import {WishlistStatus} from "./components/model/WishlistStatus.ts";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import Wishlist from "./components/Wishlist.tsx";
 import Details from "./components/Details.tsx";
+import AddRestaurant from "./components/AddRestaurant.tsx";
+
 
 
 
@@ -89,6 +91,7 @@ export default function App() {
                                                                    onToggleWishlist={handleToggleWishlist}
                         />}/>
                     <Route path="/details/:id" element={<Details />} />
+                    <Route path={"/add"} element={<AddRestaurant  setRestaurant={setRestaurants} />} />
                 </Routes>
 
         );

@@ -63,6 +63,7 @@ export default function Home(props: Readonly<HomeProps>) {
 
           {/*<button onClick={props.handelWishlist}>Wishlist</button>*/}
             <Link to={"/wishlist"}>wishlist</Link>
+            <Link to={"/add"}>Add Restaurant</Link>
 
             {filteredRestaurants.map((r) => (
                 <RestaurantCard
