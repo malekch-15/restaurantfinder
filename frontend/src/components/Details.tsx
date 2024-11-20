@@ -3,7 +3,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-export default function Details() {
+type DetailsProps = {
+
+    onHandleSaveEdit?: (restaurant: Restaurant) => void;
+};
+
+export default function Details(props: DetailsProps) {
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const { id } = useParams<{ id: string }>();
 
@@ -29,6 +34,7 @@ export default function Details() {
                 <>
                     <h1>{restaurant.name}</h1>
                     <p>{restaurant.description}</p>
+                    <button>Edit</button>
                 </>
             ) : (
                 <p>No restaurant details available</p>

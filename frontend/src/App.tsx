@@ -27,6 +27,10 @@ export default function App() {
     }
     useEffect(getAllRestaurants, [])
 
+    // const handleSaveEdit = (restaurant: Restaurant) => {
+    //
+    // }
+
     const handleDeleteRestaurant = (id: string) => {
          axios.delete(`/api/restaurant/${id}`).then(
             () => {
