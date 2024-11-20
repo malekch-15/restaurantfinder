@@ -21,7 +21,7 @@ export default function Details() {
 
     useEffect(() => {
         fetchRestaurantDetails();
-    },[id]);
+    },[]);
 
     return (
         <>

@@ -13,6 +13,7 @@ import Details from "./components/Details.tsx";
 export default function App() {
     const navigate = useNavigate();
 
+
     const [restaurants, setRestaurants] = useState<Restaurant[]>([])
 
     const getAllRestaurants = () => {
@@ -38,6 +39,9 @@ export default function App() {
     const handleViewDetails = (id: string) => {
         navigate(`/details/${id}`);
     };
+    // const handleWishlist = () => {
+    //     navigate(`/wishlist`);
+    // };
 
     const handleToggleWishlist = (id: string) => {
         const restaurant = restaurants.find(r => r.id === id);
@@ -74,10 +78,12 @@ export default function App() {
                                                onDeleteRestaurant={handleDeleteRestaurant}
                                                onToggleWishlist={handleToggleWishlist}
                                                handleViewDetails={handleViewDetails}
+                                               //handelWishlist={handleWishlist}
                />}
                                               />
                         <Route path="/wishlist" element={<Wishlist restaurants={restaurants.filter(r => r.status === "ON_WISHLIST")}
-                                                                   onToggleWishlist={handleToggleWishlist}/>}/>
+                                                                   onToggleWishlist={handleToggleWishlist}
+                        />}/>
                     <Route path="/details/:id" element={<Details />} />
                 </Routes>
 

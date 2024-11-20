@@ -6,6 +6,9 @@ type RestaurantCardProps = {
     onDeleteRestaurant?: (id: string) => void
     onToggleWishlist: (id: string) => void
     onDetails?:(id:string)=>void
+    showDetailsButton?: boolean; // Add optional props for controlling buttons
+    showEditButton?: boolean;
+    showDeleteButton?: boolean;
 }
 
 function RestaurantCard(props: Readonly<RestaurantCardProps>) {
@@ -15,11 +18,12 @@ function RestaurantCard(props: Readonly<RestaurantCardProps>) {
             <h3>{props.restaurant.name}</h3>
             <h4>{props.restaurant.city}</h4>
             <h4>{props.restaurant.category}</h4>
+            {props.showDetailsButton && (
             <button id="button-details"  onClick={() =>  props.onDetails?.(props.restaurant.id)}
-                    disabled={!props. onDetails}>Details</button>
-            <button>Edit</button>
-            <button id="button-delete"  onClick={() =>  props.onDeleteRestaurant?.(props.restaurant.id)}
-                    disabled={!props. onDeleteRestaurant}>Delete</button>
+                    disabled={!props. onDetails}>Details</button>)}
+            {props.showEditButton &&( <button>Edit</button>)}
+            {props.showDeleteButton &&( <button id="button-delete"  onClick={() =>  props.onDeleteRestaurant?.(props.restaurant.id)}
+                    disabled={!props. onDeleteRestaurant}>Delete</button>)}
             <button id="" onClick={() => props.onToggleWishlist(props.restaurant.id)}
                     className={props.restaurant.status === "ON_WISHLIST" ? "red" : "black"}
                     >♥</button>
