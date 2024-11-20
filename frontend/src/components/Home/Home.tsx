@@ -3,11 +3,16 @@ import RestaurantCard from "../RestaurantCard.tsx";
 import SearchBar from "./SearchBar.tsx";
 import { useEffect, useState } from "react";
 import "./Home.css";
+import {Link} from "react-router-dom";
+
+
 
 type HomeProps = {
     restaurants: Restaurant[];
     onDeleteRestaurant?: (id: string) => void;
     onToggleWishlist: (id: string) => void;
+    handleViewDetails: (id: string) => void;
+    handelWishlist?:()=>void;
 };
 
 export default function Home(props: Readonly<HomeProps>) {
@@ -36,6 +41,7 @@ export default function Home(props: Readonly<HomeProps>) {
         setFilteredRestaurants(filtered);
     }, [searchQuery, filterType, props.restaurants]);
 
+
     return (
         <div>
             <h2>Restaurant Finder</h2>
@@ -55,16 +61,23 @@ export default function Home(props: Readonly<HomeProps>) {
                 >Category</button>
             </div>
 
-            <div>
-                {filteredRestaurants.map((restaurant) => (
-                    <RestaurantCard
-                        key={restaurant.id}
-                        restaurant={restaurant}
-                        onDeleteRestaurant={props.onDeleteRestaurant}
-                        onToggleWishlist={props.onToggleWishlist}
-                    />
-                ))}
-            </div>
+          {/*<button onClick={props.handelWishlist}>Wishlist</button>*/}
+            <Link to={"/wishlist"}>wishlist</Link>
+            <SearchBar onSearch={handleSearch}/>
+            {filteredRestaurants.map((r) => (
+                <RestaurantCard
+                    key={r.id}
+                    restaurant={r}
+                    onDeleteRestaurant={props.onDeleteRestaurant}
+                    onToggleWishlist={props.onToggleWishlist}
+                    onDetails={props.handleViewDetails}
+                    showEditButton={true}
+                    showDetailsButton={true}
+                    showDeleteButton={true}
+
+                />
+            ))}
+
         </div>
     );
 }
