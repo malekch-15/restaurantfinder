@@ -42,17 +42,22 @@ export default function App() {
         navigate(`/details/${id}`);
     };
 
-    const handleSaveEdit = (id:string, editData:Restaurant) => {
-        if (!restaurants || !id) return;
+
+    const handleSaveEdit = (id: string, editData: Restaurant) => {
+        if (!id) return;
 
         axios
             .put(`/api/restaurant/${id}`, editData)
             .then((response) => {
-                setRestaurants(prevRestaurants => prevRestaurants.map(r => r.id === id ? response.data : r));
-                navigate(`/details/${id}`);
+                setRestaurants(prevRestaurants =>
+                    prevRestaurants.map(r => r.id === id ? response.data : r)
+                );
+                navigate(`/`);
             })
             .catch((error) => console.error("Error saving restaurant edits:", error));
     };
+
+
 
     const handleToggleWishlist = (id: string) => {
         const restaurant = restaurants.find(r => r.id === id);

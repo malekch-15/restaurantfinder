@@ -1,11 +1,10 @@
 import { Restaurant } from "./model/Restaurant";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 type detailsEditProps = {
     handleSaveEdit: (id:string, editData:Restaurant) => void;
-
 }
 
 export default function Details(props: Readonly<detailsEditProps>) {
@@ -21,6 +20,7 @@ export default function Details(props: Readonly<detailsEditProps>) {
     });
 
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
 
     const fetchRestaurantDetails = () => {
         if (!id) return;
@@ -33,6 +33,7 @@ export default function Details(props: Readonly<detailsEditProps>) {
     useEffect(() => {
         fetchRestaurantDetails();
     }, [id]);
+
 
     const handleEditToggle = () => {
         if (restaurant) {
@@ -89,8 +90,12 @@ export default function Details(props: Readonly<detailsEditProps>) {
                 ) : (
                     <div>
                         <h1>{restaurant.name}</h1>
+                        <p>{restaurant.city}</p>
+                        <p>{restaurant.category}</p>
                         <p>{restaurant.description}</p>
                         <button onClick={handleEditToggle}>Edit</button>
+                        <button onClick={() => navigate("/")}>Home</button>
+
                     </div>
                 )
             ) : (
