@@ -29,10 +29,6 @@ export default function App() {
     }
     useEffect(getAllRestaurants, [])
 
-    // const handleSaveEdit = (restaurant: Restaurant) => {
-    //
-    // }
-
     const handleDeleteRestaurant = (id: string) => {
          axios.delete(`/api/restaurant/${id}`).then(
             () => {
@@ -45,9 +41,18 @@ export default function App() {
     const handleViewDetails = (id: string) => {
         navigate(`/details/${id}`);
     };
-    // const handleWishlist = () => {
-    //     navigate(`/wishlist`);
-    // };
+
+    const handleSaveEdit = (id:string, editData:Restaurant) => {
+        if (!restaurants || !id) return;
+
+        axios
+            .put(`/api/restaurant/${id}`, editData)
+            .then((response) => {
+                setRestaurants(prevRestaurants => prevRestaurants.map(r => r.id === id ? response.data : r));
+                navigate(`/details/${id}`);
+            })
+            .catch((error) => console.error("Error saving restaurant edits:", error));
+    };
 
     const handleToggleWishlist = (id: string) => {
         const restaurant = restaurants.find(r => r.id === id);
@@ -90,7 +95,7 @@ export default function App() {
                         <Route path="/wishlist" element={<Wishlist restaurants={restaurants.filter(r => r.status === "ON_WISHLIST")}
                                                                    onToggleWishlist={handleToggleWishlist}
                         />}/>
-                    <Route path="/details/:id" element={<Details />} />
+                    <Route path="/details/:id" element={<Details handleSaveEdit={handleSaveEdit} />} />
                     <Route path={"/add"} element={<AddRestaurant  setRestaurant={setRestaurants} />} />
                 </Routes>
 
