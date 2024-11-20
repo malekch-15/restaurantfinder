@@ -5,6 +5,7 @@ type RestaurantCardProps = {
     restaurant: Restaurant;
     onDeleteRestaurant?: (id: string) => void
     onToggleWishlist: (id: string) => void
+    onDetails?:(id:string)=>void
 }
 
 function RestaurantCard(props: Readonly<RestaurantCardProps>) {
@@ -14,7 +15,8 @@ function RestaurantCard(props: Readonly<RestaurantCardProps>) {
             <h3>{props.restaurant.name}</h3>
             <h4>{props.restaurant.city}</h4>
             <h4>{props.restaurant.category}</h4>
-            <button>Details</button>
+            <button id="button-details"  onClick={() =>  props.onDetails?.(props.restaurant.id)}
+                    disabled={!props. onDetails}>Details</button>
             <button>Edit</button>
             <button id="button-delete"  onClick={() =>  props.onDeleteRestaurant?.(props.restaurant.id)}
                     disabled={!props. onDeleteRestaurant}>Delete</button>

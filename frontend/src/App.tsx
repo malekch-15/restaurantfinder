@@ -4,11 +4,14 @@ import {useEffect, useState} from "react";
 import {Restaurant} from "./components/model/Restaurant.ts";
 import Home from "./components/Home/Home.tsx"
 import {WishlistStatus} from "./components/model/WishlistStatus.ts";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Wishlist from "./components/Wishlist.tsx";
+import Details from "./components/Details.tsx";
+
 
 
 export default function App() {
+    const navigate = useNavigate();
 
     const [restaurants, setRestaurants] = useState<Restaurant[]>([])
 
@@ -27,10 +30,14 @@ export default function App() {
          axios.delete(`/api/restaurant/${id}`).then(
             () => {
                 getAllRestaurants()
+
             }
         ).catch((error) => {
             console.error(error)
         })}
+    const handleViewDetails = (id: string) => {
+        navigate(`/details/${id}`);
+    };
 
     const handleToggleWishlist = (id: string) => {
         const restaurant = restaurants.find(r => r.id === id);
@@ -65,9 +72,13 @@ export default function App() {
                 <Routes>
                 <Route path="/" element={<Home restaurants={restaurants}
                                                onDeleteRestaurant={handleDeleteRestaurant}
-                                               onToggleWishlist={handleToggleWishlist}/>}/>
+                                               onToggleWishlist={handleToggleWishlist}
+                                               handleViewDetails={handleViewDetails}
+               />}
+                                              />
                         <Route path="/wishlist" element={<Wishlist restaurants={restaurants.filter(r => r.status === "ON_WISHLIST")}
                                                                    onToggleWishlist={handleToggleWishlist}/>}/>
+                    <Route path="/details/:id" element={<Details />} />
                 </Routes>
 
         );

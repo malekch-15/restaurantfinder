@@ -9,6 +9,7 @@ type HomeProps = {
     restaurants: Restaurant [];
     onDeleteRestaurant?: (id: string) => void;
     onToggleWishlist: (id: string) => void;
+    handleViewDetails: (id: string) => void;
 }
 
 export default function Home(props: Readonly<HomeProps>) {
@@ -30,15 +31,18 @@ export default function Home(props: Readonly<HomeProps>) {
             <h2>Home2</h2>
             <h2>Restaurantfinder</h2>
 
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar onSearch={handleSearch}/>
             {filteredRestaurants.map((r) => (
                 <RestaurantCard
                     key={r.id}
                     restaurant={r}
                     onDeleteRestaurant={props.onDeleteRestaurant}
                     onToggleWishlist={props.onToggleWishlist}
+                    onDetails={props.handleViewDetails}
+
                 />
             ))}
+
         </div>
     )
 }
