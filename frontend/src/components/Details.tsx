@@ -2,6 +2,7 @@ import { Restaurant } from "./model/Restaurant";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import AddRestaurant from "./AddRestaurant.tsx";
 
 type DetailsProps = {
 

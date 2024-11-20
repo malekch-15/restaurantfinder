@@ -12,7 +12,7 @@ type HomeProps = {
     onDeleteRestaurant?: (id: string) => void;
     onToggleWishlist: (id: string) => void;
     handleViewDetails: (id: string) => void;
-    handelWishlist?:()=>void;
+
 };
 
 export default function Home(props: Readonly<HomeProps>) {
