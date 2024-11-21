@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
 type detailsEditProps = {
-    handleSaveEdit: (id:string, editData:Restaurant) => void;
+    handleSaveEdit: (id:string, editData:Restaurant) => Promise<any>;
 }
 
 export default function Details(props: Readonly<detailsEditProps>) {
@@ -83,7 +83,7 @@ export default function Details(props: Readonly<detailsEditProps>) {
                                 cols={40}
                             />
                             </label>
-                            <button type="button" onClick={()=>props.handleSaveEdit(restaurant.id, editData)}>Save</button>
+                            <button type="button" onClick={()=>{props.handleSaveEdit(restaurant.id, editData).then(()=> fetchRestaurantDetails()); setEditingRestaurantId(null)}}>Save</button>
                             <button type="button" onClick={handleCancelEdit}>Cancel</button>
                         </form>
                     </div>

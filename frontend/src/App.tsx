@@ -44,15 +44,13 @@ export default function App() {
 
 
     const handleSaveEdit = (id: string, editData: Restaurant) => {
-        if (!id) return;
 
-        axios
+        return axios
             .put(`/api/restaurant/${id}`, editData)
             .then((response) => {
                 setRestaurants(prevRestaurants =>
                     prevRestaurants.map(r => r.id === id ? response.data : r)
                 );
-                navigate(`/`);
             })
             .catch((error) => console.error("Error saving restaurant edits:", error));
     };
